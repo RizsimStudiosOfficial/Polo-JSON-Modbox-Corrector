@@ -1,0 +1,350 @@
+  :root {
+      --col-gray: #dae6f3;
+	  --col-gray-darkmode: #1e1e1e;
+  }
+
+    body { 
+	font-family: Arial;
+	background-color: var(--col-gray-darkmode);	
+	max-width: 900px; 
+	margin: auto; 
+	padding: 20px; 
+	}
+	
+    input { width: 100px; }
+    .notice { background: #f9f9f9; border-left: 4px solid #2196F3; padding: 10px; margin-bottom: 10px; }
+	
+	textarea {
+    width: 100%;
+    height: 200px;
+    font-family: 'Fira Code', Consolas, 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #1e1e1e;    /* dark background */
+    color: #d4d4d4;               /* light text */
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    resize: none;                  /* prevent resizing */
+    overflow: auto;                /* scroll if content exceeds */
+    white-space: pre;              /* preserve indentation */
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+
+	
+.example-img {
+    width: 100%;
+    height: 430px;
+	background-image: url("../exampleYTallPolo.png");
+    border-radius: 20px;
+	background-size: cover;
+	background-repeat: no-repeat;
+    background-position: center;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-drag: none;
+	user-select: none;
+	cursor: pointer;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}	
+
+.example-img:hover {
+    transform: scale(1.015);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+button:disabled {
+    background-color: #555;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+button {
+font-family: Allan;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+	width: 200px;
+	height: 50px;
+	border-radius: 8px;
+	font-size: 30px;
+    transition: background-color 0.2s;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-drag: none;
+	user-select: none;
+	margin: 0 38.5%;
+}
+
+button:hover:enabled {
+    background-color: #1976D2;
+}
+
+#drop-area {
+    border: 2px dashed #2196F3;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    color: #ccc;
+    font-size: 18px;
+    margin-bottom: 20px;
+    transition: background 0.2s, color 0.2s;
+}
+
+#drop-area.dragover {
+    background-color: #2196F3;
+    color: white;
+    border-color: #1976D2;
+}
+
+
+h2, h3 {
+text-align: center;
+color: white;
+}
+
+h3, br, p, .field, .field-label, .note-block, #drop-area {
+    user-select: none;          /* Standard */
+    -webkit-user-select: none;  /* Safari / Chrome */
+    -moz-user-select: none;     /* Firefox */
+    -ms-user-select: none;      /* Old Edge */
+    -webkit-user-drag: none;    /* WebKit */
+    pointer-events: auto;       /* keep normal behavior */
+}
+
+.icn-svg {
+    display: inline-block;
+    width: inherit;
+    height: inherit;
+    stroke-width: 0;
+    stroke: white;
+    fill: white;
+}
+
+.smlNote {
+font-size: 30px;
+text-align: center;
+font-weight: bold;
+text-transform: uppercase;
+color: white;
+-webkit-user-drag: none;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-drag: none;
+user-select: none;
+}
+
+.note-block {
+    background: #121212;
+    padding: 12px 10px;
+    color: #ccc;
+    font-size: 13px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+	font-weight: bold;
+	text-align: center;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+
+.note-block p {
+    margin: 6px 0;
+}
+
+.mainTitle {
+font-size: 50px;
+user-select: none;          /* Standard */
+-webkit-user-select: none;  /* Safari / Chrome */
+-moz-user-select: none;     /* Firefox */
+-ms-user-select: none;      /* Old Edge */
+-webkit-user-drag: none;    /* WebKit */
+pointer-events: auto;       /* keep normal behavior */
+}
+
+.panel {
+    background: #121212;
+    border-radius: 14px;
+    padding: 20px;
+    margin: 30px 0;
+}
+
+.field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.field-label {
+	font-family: Allan;
+    color: #ccc;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ic-info {
+    display: flex;
+    align-items: center;
+	margin-right: 72%;
+    gap: 6px;
+}
+
+.toggle-label {
+    color: #ccc;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Number input styling */
+input.num {
+    width: 120px;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+input.num:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 6px rgba(33,150,243,0.5);
+}
+
+/* Placeholder styling */
+input.num::placeholder {
+    color: #888;
+    font-style: italic;
+}
+
+/* Remove arrows for number inputs */
+input.num::-webkit-inner-spin-button,
+input.num::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Tooltip icon */
+.info {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: rgb(204, 204, 204);
+    color: #000;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 18px;
+	margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+.info:hover {
+background-color: rgb(200, 200, 200);
+}
+
+.tooltip-content {
+	font-family: Arial;
+    display: none; /* hide by default */
+    position: absolute;
+    bottom: 140%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+    color: #ddd;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    text-align: center;
+    width: max-content;
+    max-width: 220px;
+    white-space: normal;  /* allow line breaks */
+    z-index: 10;
+}
+
+.info:hover .tooltip-content {
+    display: block; /* show tooltip on hover */
+}
+
+.info:hover::after {
+    opacity: 1;
+}
+
+/* Toggle checkbox */
+.field.toggle {
+    justify-content: space-between;
+}
+
+.field.toggle input {
+    transform: scale(1.2);
+}
+
+input.num.empty {
+    color: #888;
+    font-style: italic;
+}
+
+.img-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.9);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.img-modal.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-bg {
+    background-size: contain; /* or cover */
+}
+
+.img-modal-bg {
+    width: 90vw;
+    height: 90vh;
+    border-radius: 20px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain; /* ensures it fits inside rounded div */
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5); /* makes corners pop */
+    cursor: zoom-in;
+    transition: background-size 0.15s ease;
+}
+
+
+.img-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
