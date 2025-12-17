@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Polo JSON Corrector</title>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+</head>
+<body>
+
+<h2 class="mainTitle">Polo JSON To Modbox Corrector</h2>
+
+
+ <div class="smlNote">Small Note</div>
+ 
+ <br>
+
+<div class="note-block">
+    <p>
+        This tool is mainly for taller Polos (height &gt; 450) for example that were made in
+        <strong>RMB (Rem’s Modding Build)</strong>.
+    </p>
+
+    <p>
+        Wider Polos are handled fine by <strong>RMB</strong> and <strong>Modbox</strong>, so you
+        usually don’t need this tool for those.
+    </p>
+
+    <p>
+        If you are using <strong>SWFtoSprite</strong>, this tool isn’t needed at all.
+    </p>
+
+    <p>
+        It is intended for people who prefer manual JSON editing or have trouble accessing
+        SWFtoSprite for Incredibox mods.
+    </p>
+
+    <p>
+        Use this tool only if your Polo’s Y / head values need manual correction for proper
+        alignment in Incredibox mods.
+    </p>
+</div>
+
+ <div class="smlNote">Recommended</div>	
+ 
+ <br>
+ 
+ <div class="note-block">
+    <p>
+	Use an <strong>Adobe Animate</strong> (or Flash) FLA to check the Polo's Y value. 
+    </p>
+
+    <p>
+      This ensures correct head placement and avoids inconsistent results, especially for taller Polos.
+    </p>
+</div>
+<br>
+
+<div class="example-img"></div>
+
+<br>
+<br>
+
+<div class="panel">
+    <h3>Polo Settings</h3>
+
+    <div class="field">
+        <div class="field-label">Polo Height		<span class="info">
+		<svg class="icn-svg"><use xlink:href="#ic-help"></use></svg>
+		<div class="tooltip-content">
+		The height value from your Polo JSON
+		</div>
+		</span></div>
+        <input id="height" type="number" value="450" placeholder="Polo Height" required class="num">
+    </div>
+
+    <div class="field">
+        <div class="field-label">Row Step</div>
+		<div class="ic-info">
+		<span class="info">
+		<svg class="icn-svg"><use xlink:href="#ic-help"></use></svg>
+		<div class="tooltip-content">
+       <span style="font-size: 11px;">Vertical spacing between animation rows</span>
+	   <br>
+       <span style="font-size: 11px;">Best to keep the default at 300.</span>
+		</div>
+		</span>
+		</div>
+        <input id="step" type="number" value="300" placeholder="300 (default)" class="num">
+    </div>
+	
+
+    <div class="field">
+        <div class="field-label">Polo Y Value
+		<span class="info">
+		 <svg class="icn-svg"><use xlink:href="#ic-help"></use></svg>
+		<div class="tooltip-content">
+		Head Y offset taken from Adobe Animate FLA or RMB Polo JSON.
+		</div>
+		</span>
+		</div>
+        <input id="headAdd" type="number" value="70" placeholder="Polo JSON Y" class="num">
+    </div>
+
+<div class="field toggle" id="keepHeadField" style="display: none;">
+    <span class="toggle-label">
+        Keep head value unchanged
+        <span class="info" data-tip="When enabled, the original head value is preserved.">?</span>
+    </span>
+    <input type="checkbox" id="keepHead">
+</div>
+</div>
+
+
+<h3>Paste JSON:</h3>
+<textarea id="input"></textarea>
+
+<br>
+
+<button id="correctBtn" onclick="correctJSON()" disabled>Correct JSON</button>
+
+<br>
+<br>
+
+<h3>Or Drag & Drop JSON File:</h3>
+<div id="drop-area">
+    Drop your JSON file here
+</div>
+
+<!-- Hidden sections -->
+<div id="results" style="display: none;">
+<br>
+    <h3>Notes on Changes:</h3>
+    <textarea id="notes" readonly></textarea>
+
+<br>
+
+    <h3>Corrected JSON Output:</h3>
+    <textarea id="output"></textarea>
+</div>
+
+<div id="imgModal" class="img-modal">
+    <span class="img-modal-close">&times;</span>
+    <div class="img-modal-bg" id="modalBg"></div>
+</div>
+
+<script>
+const showKeepHeadToggle = false; // set true to show the toggle again
+
+// Show toggle only if enabled
+if (showKeepHeadToggle) {
+    document.getElementById('keepHeadField').style.display = 'flex';
+}
+
+document.querySelectorAll('input.num').forEach(input => {
+    input.addEventListener('input', () => {
+        if (input.value === '') {
+            input.classList.add('empty');
+        } else {
+            input.classList.remove('empty');
+        }
+    });
+});
+
+const inputArea = document.getElementById('input');
+const correctBtn = document.getElementById('correctBtn');
+
+function isValidPoloJSON(text) {
+    try {
+        const json = JSON.parse(text);
+
+        // Check top-level keys
+        const requiredKeys = ["animeName","percentageMax","totalFrame","width","height","headHeight","arrayFrame"];
+        for (const key of requiredKeys) {
+            if (!(key in json)) return false;
+        }
+
+        // Check arrayFrame is an array
+        if (!Array.isArray(json.arrayFrame)) return false;
+
+        // Check each element in arrayFrame
+        for (const frame of json.arrayFrame) {
+            if (typeof frame !== "object" || typeof frame.prop !== "string") return false;
+        }
+
+        return true; // passed all checks
+    } catch {
+        return false; // invalid JSON
+    }
+}
+
+// Usage with button enabling
+inputArea.addEventListener('input', () => {
+    correctBtn.disabled = !isValidPoloJSON(inputArea.value);
+});
+
+const dropArea = document.getElementById('drop-area');
+
+dropArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropArea.classList.add('dragover');
+});
+
+dropArea.addEventListener('dragleave', () => {
+    dropArea.classList.remove('dragover');
+});
+
+dropArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropArea.classList.remove('dragover');
+
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    
+    if (file.type !== "application/json" && !file.name.endsWith(".json")) {
+        alert("Please drop a valid JSON file.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        inputArea.value = event.target.result;
+        correctBtn.disabled = inputArea.value.trim() === '';
+    };
+    reader.readAsText(file);
+});
+
+function safeInt(value, fallback = 0) {
+    const n = parseInt(value, 10);
+    return Number.isFinite(n) ? n : fallback;
+}
+
+function safeFloat(value, fallback = 0) {
+    const n = parseFloat(value);
+    return Number.isFinite(n) ? n : fallback;
+}
+
+function correctJSON() {
+	let notesArr = [];
+
+    let text = document.getElementById("input").value;
+	let baseHeight = safeInt(document.getElementById("height").value, null);
+
+	if (baseHeight === null) {
+    alert("Polo Height is required!");
+    return;
+	}
+
+	let step = safeInt(document.getElementById("step").value, 300);
+	let rawHeadAdd = document.getElementById("headAdd").value;
+
+	let headAdd;
+	if (rawHeadAdd === "") {
+    headAdd = 0;
+    notesArr.push(
+        "⚠ Head Y value not provided. Results may be inaccurate. " +
+        "For best alignment, ask someone with Adobe Animate to calculate it."
+    );
+	} else {
+    headAdd = safeInt(rawHeadAdd, 0);
+	}
+	
+    let keepHead = false; // default
+
+    if (showKeepHeadToggle) {
+        keepHead = document.getElementById("keepHead").checked;
+    }
+
+    let json = JSON.parse(text);
+    let hasVersion = json.version !== undefined;
+    let ys = json.arrayFrame
+    .map(f => {
+        if (!f.prop) return null;
+        const parts = f.prop.split(",");
+        return safeInt(parts[1], null);
+    })
+    .filter(v => v !== null);
+
+if (ys.length === 0) {
+    alert("Invalid frame data: no valid Y values found.");
+    return;
+}
+
+	let minY = Math.min(...ys);
+
+    json.arrayFrame = json.arrayFrame.map((f, index) => {
+        let prop = f.prop.split(",");
+        let x = prop[0], y = parseInt(prop[1]), z = prop[2], head = parseFloat(prop[3]);
+        let rowIndex = step !== 0 ? Math.round((y - minY) / step) : 0;
+        let newY = baseHeight + (rowIndex * step);
+        let newHead = keepHead ? head : head + headAdd;
+
+        if (y !== newY || head !== newHead) {
+            notesArr.push(`Frame ${index}: Y ${y}→${newY}, Head ${head}→${newHead}, Row ${rowIndex}`);
+        }
+
+        return { prop: `${x},${newY},${z},${newHead}` };
+    });
+
+    // Show results container
+    document.getElementById("results").style.display = "block";
+
+    document.getElementById("notes").value = notesArr.join("\n") || "No changes.";
+
+    let output = '{\n';
+    if (!hasVersion) output += '  "version": "3",\n';
+    for (let key in json) {
+        if (key !== "arrayFrame") output += `  "${key}": ${JSON.stringify(json[key])},\n`;
+        else {
+            output += `  "arrayFrame": [\n`;
+            json.arrayFrame.forEach((f, i) => {
+                output += `    {"prop":"${f.prop}"}`;
+                if (i < json.arrayFrame.length - 1) output += ',';
+                output += '\n';
+            });
+            output += `  ]\n`;
+        }
+    }
+    output += '}';
+
+    document.getElementById("output").value = output;
+}
+</script>
+
+<script>
+const exampleImg = document.querySelector(".example-img");
+const modal = document.getElementById("imgModal");
+const modalBg = document.getElementById("modalBg");
+const closeBtn = document.querySelector(".img-modal-close");
+
+let zoom = 100;
+
+// Extract background-image URL
+function getBgUrl(el) {
+    const bg = getComputedStyle(el).backgroundImage;
+    return bg.slice(5, -2); // removes url("...")
+}
+
+exampleImg.addEventListener("click", () => {
+    const imgUrl = getBgUrl(exampleImg);
+    modalBg.style.backgroundImage = `url("${imgUrl}")`;
+    zoom = 100;
+    modalBg.style.backgroundSize = "contain";
+    modal.classList.add("open");
+});
+
+function closeModal() {
+    modal.classList.remove("open");
+}
+
+closeBtn.addEventListener("click", closeModal);
+
+// Click outside closes
+modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+});
+
+// ESC closes
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+});
+
+// Zoom with mouse wheel
+modalBg.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    zoom += e.deltaY * -0.2;
+    zoom = Math.min(Math.max(100, zoom), 500); // 100%–500%
+    modalBg.style.backgroundSize = `${zoom}%`;
+});
+</script>
+
+
+
+        <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+                <symbol id="ic-help" viewBox="0 0 32 32">
+                    <path
+                        d="M21.019 10.901c-0.595-2.081-2.48-3.579-4.716-3.579-0.030 0-0.059 0-0.089 0.001l0.004-0c-0.070-0.003-0.152-0.005-0.235-0.005-2.267 0-4.191 1.471-4.87 3.51l-0.010 0.036c-0.101 0.343-0.159 0.737-0.159 1.144 0 0.528 0.098 1.033 0.275 1.498l-0.010-0.029c0.17 0.377 0.543 0.634 0.975 0.634 0.589 0 1.067-0.478 1.067-1.067 0-0.124-0.021-0.243-0.060-0.354l0.002 0.007c-0.075-0.206-0.118-0.443-0.118-0.69 0-0.183 0.024-0.361 0.068-0.53l-0.003 0.014c0.411-1.198 1.527-2.044 2.842-2.044 0.072 0 0.143 0.002 0.213 0.007l-0.009-0.001c0.028-0.001 0.061-0.002 0.094-0.002 1.267 0 2.336 0.843 2.679 1.998l0.005 0.020c0.256 0.939-0.309 1.776-1.312 2.816l-0.133 0.139c-1.019 1.067-1.904 1.979-2.469 3.472-0.044 0.112-0.069 0.241-0.069 0.377 0 0.455 0.285 0.843 0.686 0.997l0.007 0.002c0.11 0.044 0.238 0.069 0.371 0.069 0.001 0 0.001 0 0.002 0h-0c0.008 0 0.017 0 0.025 0 0.449 0 0.833-0.278 0.991-0.67l0.003-0.007c0.411-1.067 1.067-1.749 2.016-2.752l0.128-0.139c0.779-0.843 2.443-2.571 1.808-4.875z"
+                    ></path>
+                    <path d="M17.36 22.811c0 0.736-0.597 1.333-1.333 1.333s-1.333-0.597-1.333-1.333c0-0.736 0.597-1.333 1.333-1.333s1.333 0.597 1.333 1.333z"></path>
+                </symbol>
+        </svg>
+</body>
+</html>
