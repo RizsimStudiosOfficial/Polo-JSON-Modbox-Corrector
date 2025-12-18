@@ -107,7 +107,7 @@ text-align: center;
 color: white;
 }
 
-h3, br, p, .field, .field-label, .note-block, #drop-area {
+h3, br, p, .field, .field-label, .note-block, #drop-area, #correctBtn {
     user-select: none;          /* Standard */
     -webkit-user-select: none;  /* Safari / Chrome */
     -moz-user-select: none;     /* Firefox */
@@ -122,7 +122,7 @@ h3, br, p, .field, .field-label, .note-block, #drop-area {
     height: inherit;
     stroke-width: 0;
     stroke: white;
-    fill: white;
+    fill: black;
 }
 
 .smlNote {
@@ -194,11 +194,12 @@ pointer-events: auto;       /* keep normal behavior */
 .ic-info {
     display: flex;
     align-items: center;
-	margin-right: 72%;
+	margin-right: 66%;
     gap: 6px;
 }
 
 .toggle-label {
+	font-family: Allan;
     color: #ccc;
     font-size: 20px;
     display: flex;
