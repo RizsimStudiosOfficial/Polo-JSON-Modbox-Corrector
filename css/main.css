@@ -332,12 +332,12 @@ input.num.empty {
 
 .img-modal-bg {
     width: 90vw;
-    height: 90vh;
+    height: 65%;
     border-radius: 20px;
     overflow: hidden;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: contain; /* ensures it fits inside rounded div */
+    background-size: 100%; /* ensures it fits inside rounded div */
     box-shadow: 0 15px 40px rgba(0,0,0,0.5); /* makes corners pop */
     cursor: zoom-in;
     transition: background-size 0.15s ease;
