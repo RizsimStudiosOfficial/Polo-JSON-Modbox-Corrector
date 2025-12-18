@@ -99,6 +99,20 @@
 		</div>
         <input id="headAdd" type="number" value="70" placeholder="Polo JSON Y" class="num">
     </div>
+	
+<div class="field toggle" id="invertYField">
+    <span class="toggle-label">
+        Apply RMB Y Logic
+		<span class="info">
+		 <svg class="icn-svg"><use xlink:href="#ic-help"></use></svg>
+		<div class="tooltip-content">
+		For Rem’s Modding Build Polos only. Converts input Y values to match RMB offsets.
+		</div>
+		</span>
+    </span>
+    <input type="checkbox" id="invertY">
+</div>
+
 
 <div class="field toggle" id="keepHeadField" style="display: none;">
     <span class="toggle-label">
@@ -162,6 +176,11 @@ document.querySelectorAll('input.num').forEach(input => {
 
 const inputArea = document.getElementById('input');
 const correctBtn = document.getElementById('correctBtn');
+
+function cleanNum(n) {
+    // Removes floating-point garbage like 7.200000000000003 → 7.2
+    return Number(n.toFixed(6)).toString();
+}
 
 function isValidPoloJSON(text) {
     try {
@@ -283,16 +302,22 @@ if (ys.length === 0) {
 
     json.arrayFrame = json.arrayFrame.map((f, index) => {
         let prop = f.prop.split(",");
-        let x = prop[0], y = parseInt(prop[1]), z = prop[2], head = parseFloat(prop[3]);
+        let x = prop[0];
+		let y = parseInt(prop[1], 10);
+		let z = parseFloat(prop[2]);   // ✅ FIX
+		let head = parseFloat(prop[3]);
         let rowIndex = step !== 0 ? Math.round((y - minY) / step) : 0;
         let newY = baseHeight + (rowIndex * step);
-        let newHead = keepHead ? head : head + headAdd;
+        let applyRMBLogic = document.getElementById('invertY').checked;
+		let newHead = keepHead ? head : (applyRMBLogic ? head - headAdd : head + headAdd);
 
         if (y !== newY || head !== newHead) {
-            notesArr.push(`Frame ${index}: Y ${y}→${newY}, Head ${head}→${newHead}, Row ${rowIndex}`);
+            notesArr.push(`Frame ${index}: Y ${y}→${newY}, Head ${head}→${cleanNum(newHead)}, Row ${rowIndex}`);
         }
 
-        return { prop: `${x},${newY},${z},${newHead}` };
+    return {
+    prop: `${x},${cleanNum(newY)},${cleanNum(z)},${cleanNum(newHead)}`
+	};
     });
 
     // Show results container
@@ -380,6 +405,3 @@ modalBg.addEventListener("wheel", (e) => {
         </svg>
 </body>
 </html>
-
-
-
