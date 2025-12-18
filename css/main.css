@@ -105,9 +105,14 @@ button:hover:enabled {
 h2, h3 {
 text-align: center;
 color: white;
+user-select: none;          /* Standard */
+-webkit-user-select: none;  /* Safari / Chrome */
+-moz-user-select: none;     /* Firefox */
+-ms-user-select: none;      /* Old Edge */
+-webkit-user-drag: none;    /* WebKit */
 }
 
-h3, br, p, .field, .field-label, .note-block, #drop-area, #correctBtn {
+br, p, .field, .field-label, .note-block, #drop-area, #correctBtn, button {
     user-select: none;          /* Standard */
     -webkit-user-select: none;  /* Safari / Chrome */
     -moz-user-select: none;     /* Firefox */
