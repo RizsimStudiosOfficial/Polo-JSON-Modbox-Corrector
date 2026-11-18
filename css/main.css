@@ -122,15 +122,10 @@
       text-align: center;
       color: white;
       user-select: none;
-      /* Standard */
       -webkit-user-select: none;
-      /* Safari / Chrome */
       -moz-user-select: none;
-      /* Firefox */
       -ms-user-select: none;
-      /* Old Edge */
       -webkit-user-drag: none;
-      /* WebKit */
   }
 
   br,
@@ -142,15 +137,10 @@
   #correctBtn,
   button {
       user-select: none;
-      /* Standard */
       -webkit-user-select: none;
-      /* Safari / Chrome */
       -moz-user-select: none;
-      /* Firefox */
       -ms-user-select: none;
-      /* Old Edge */
       -webkit-user-drag: none;
-      /* WebKit */
       pointer-events: auto;
   }
 
@@ -187,7 +177,9 @@
       font-weight: bold;
       text-align: center;
       user-select: none;
+      user-drag: none;
       -webkit-user-select: none;
+      -webkit-user-drag: none;
       -moz-user-select: none;
       -ms-user-select: none;
   }
@@ -199,15 +191,10 @@
   .mainTitle {
       font-size: 50px;
       user-select: none;
-      /* Standard */
       -webkit-user-select: none;
-      /* Safari / Chrome */
       -moz-user-select: none;
-      /* Firefox */
       -ms-user-select: none;
-      /* Old Edge */
       -webkit-user-drag: none;
-      /* WebKit */
       pointer-events: auto;
   }
 
